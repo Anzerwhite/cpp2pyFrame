@@ -18,7 +18,7 @@ std::vector<int> CppCaller::testFn(std::vector<int> data)
     // 声明一个用于接收结果的数组
     std::vector<int> result{};
 
-    // 下面实现对.pyd文件中的函数的操作（前提是前面的操作没问题，pModule不会是空指针
+    // 下面实现对.py/.pyd文件中的函数的操作（前提是前面的操作没问题，pModule不会是空指针
     if (pModule != nullptr) {
         PyObject* pFunc = PyObject_GetAttrString(pModule, "test_cpp2py"); // 获取函数，这里填写要调用的函数名，笔者这里是test_cpp2py
         if (pFunc && PyCallable_Check(pFunc)) { // 判断该函数是否存在且可调用
