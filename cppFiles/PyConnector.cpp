@@ -1,7 +1,7 @@
 #include "PyConnector.h"
 #include <iostream>
 
-// ´úÂëÒ»ÔËĞĞ¾Í³õÊ¼»¯´´½¨ÊµÀı £¬±¾Éí¾ÍÏß³Ì°²È«
+// ä»£ç ä¸€è¿è¡Œå°±åˆå§‹åŒ–åˆ›å»ºå®ä¾‹ ï¼Œæœ¬èº«å°±çº¿ç¨‹å®‰å…¨
 PyConnector* PyConnector::ptr_PyConnector = new (std::nothrow) PyConnector();
 
 PyConnector* PyConnector::GetInstance()
@@ -9,6 +9,7 @@ PyConnector* PyConnector::GetInstance()
 	return ptr_PyConnector;
 }
 
+// åˆ é™¤å®ä¾‹
 void PyConnector::deleteInstance()
 {
 	if (ptr_PyConnector)
@@ -20,23 +21,29 @@ void PyConnector::deleteInstance()
 
 PyConnector::PyConnector()
 {
-	Py_Initialize(); // ³õÊ¼»¯python½âÊÍÆ÷
+    // åˆå§‹åŒ–pythonè§£é‡Šå™¨
+	Py_Initialize(); 
+
+    // é…ç½®ç¯å¢ƒå˜é‡
 	PyObject* sysPath = PySys_GetObject(SYS_PATH);
 	PyObject* pPath = PyUnicode_FromString(P_PATH);
-	PyObject* pPath_packages = PyUnicode_FromString(P_PATH_PACKAGES);
+	PyObject* pPath_packages = PyUnicode_FromString(P_PATH_PACKAGES); 
 	PyList_Append(sysPath, pPath);
-	Py_DECREF(pPath);
+	Py_DECREF(pPath); // é‡Šæ”¾å¯¹è±¡
 	PyList_Append(sysPath, pPath_packages);
-	Py_DECREF(pPath_packages);
+	Py_DECREF(pPath_packages); // é‡Šæ”¾å¯¹è±¡
 
-	pModule_TESTFILE = PyImport_ImportModule(TESTFILE_MODULE); // µ¼ÈëÃûÎªtestFileµÄPythonÄ£¿é
+    // å¯¼å…¥åä¸ºtestFileçš„Pythonæ¨¡å—
+	pModule_TESTFILE = PyImport_ImportModule(TESTFILE_MODULE); 
 
 }
 
 PyConnector::~PyConnector()
 {
+    Py_Finalize(); // ç»“æŸpythonè§£é‡Šå™¨
 }
 
+// è·å–å¯¹åº”pythonæ–‡ä»¶çš„æ¨¡å—
 PyObject* PyConnector::getModuleTest() {
 	return pModule_TESTFILE;
 }
