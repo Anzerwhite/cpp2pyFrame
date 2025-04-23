@@ -4,7 +4,7 @@
 
 CppCaller::CppCaller()
 {
-    // ´ÓpyConnectµ¥ÀıÖĞ»ñÈ¡pythonÄ£¿éÊµÀı
+    // ä»pyConnectå•ä¾‹ä¸­è·å–pythonæ¨¡å—å®ä¾‹
     pModule = PyConnector::GetInstance()->getModuleTest();
 }
 
@@ -15,31 +15,30 @@ CppCaller::~CppCaller()
 std::vector<int> CppCaller::testFn(std::vector<int> data)
 {
 
-    // ÉùÃ÷Ò»¸öÓÃÓÚ½ÓÊÕ½á¹ûµÄÊı×é
+    // å£°æ˜ä¸€ä¸ªç”¨äºæ¥æ”¶ç»“æœçš„æ•°ç»„
     std::vector<int> result{};
 
-    // ÏÂÃæÊµÏÖ¶Ô.pydÎÄ¼şÖĞµÄº¯ÊıµÄ²Ù×÷£¨Ç°ÌáÊÇÇ°ÃæµÄ²Ù×÷Ã»ÎÊÌâ£¬pModule²»»áÊÇ¿ÕÖ¸Õë
+    // ä¸‹é¢å®ç°å¯¹.pydæ–‡ä»¶ä¸­çš„å‡½æ•°çš„æ“ä½œï¼ˆå‰ææ˜¯å‰é¢çš„æ“ä½œæ²¡é—®é¢˜ï¼ŒpModuleä¸ä¼šæ˜¯ç©ºæŒ‡é’ˆ
     if (pModule != nullptr) {
-        PyObject* pFunc = PyObject_GetAttrString(pModule, "test_cpp2py"); // »ñÈ¡º¯Êı£¬ÕâÀïÌîĞ´Òªµ÷ÓÃµÄº¯ÊıÃû£¬±ÊÕßÕâÀïÊÇtest_cpp2py
-        if (pFunc && PyCallable_Check(pFunc)) { // ÅĞ¶Ï¸Ãº¯ÊıÊÇ·ñ´æÔÚÇÒ¿Éµ÷ÓÃ
+        PyObject* pFunc = PyObject_GetAttrString(pModule, "test_cpp2py"); // è·å–å‡½æ•°ï¼Œè¿™é‡Œå¡«å†™è¦è°ƒç”¨çš„å‡½æ•°åï¼Œç¬”è€…è¿™é‡Œæ˜¯test_cpp2py
+        if (pFunc && PyCallable_Check(pFunc)) { // åˆ¤æ–­è¯¥å‡½æ•°æ˜¯å¦å­˜åœ¨ä¸”å¯è°ƒç”¨
 
-            // ´´½¨²ÎÊı£¬ÓÉÓÚc++ºÍpythonµÄÀàĞÍ²»¶ÔÓ¦£¬ËùÒÔÒª×ª»¯
-            // ÕâÀï¸ù¾İ´«ÈëµÄvectorÀàĞÍµÄdataÀ´´´½¨Ò»¸ö¶ÔÓ¦ÁĞ±ílist
+            // åˆ›å»ºå‚æ•°ï¼Œç”±äºc++å’Œpythonçš„ç±»å‹ä¸å¯¹åº”ï¼Œæ‰€ä»¥è¦è½¬åŒ–
+            // è¿™é‡Œæ ¹æ®ä¼ å…¥çš„vectorç±»å‹çš„dataæ¥åˆ›å»ºä¸€ä¸ªå¯¹åº”åˆ—è¡¨list
             PyObject* pData = PyList_New(data.size());
             for (int i = 0; i < data.size(); ++i) {
-                PyList_SetItem(pData, i, PyLong_FromLong(data[i])); // ÕâÀïÒª¶Ôdata[i]×ª»¯ÎªpythonÀàĞÍ
+                PyList_SetItem(pData, i, PyLong_FromLong(data[i])); // è¿™é‡Œè¦å¯¹data[i]è½¬åŒ–ä¸ºpythonç±»å‹
             }
 
-            // ¹¹½¨Ò»¸ö²ÎÊıÁĞ±í£¬µÚÒ»¸ö²ÎÊıÎª²ÎÊıÁĞ±íµÄ²ÎÊıÊıÁ¿£¬ÕâÀïÎª1
+            // æ„å»ºä¸€ä¸ªå‚æ•°åˆ—è¡¨ï¼Œç¬¬ä¸€ä¸ªå‚æ•°ä¸ºå‚æ•°åˆ—è¡¨çš„å‚æ•°æ•°é‡ï¼Œè¿™é‡Œä¸º1
             PyObject* pArgs = PyTuple_Pack(1, pData);
-            // µ÷ÓÃ¸Ãº¯Êı
-            PyObject* pValue = PyObject_CallObject(pFunc, pArgs); // µ÷ÓÃº¯Êı
+            // è°ƒç”¨è¯¥å‡½æ•°
+            PyObject* pValue = PyObject_CallObject(pFunc, pArgs); // è°ƒç”¨å‡½æ•°
             Py_DECREF(pArgs);
 
-            // ´¦Àí·µ»ØÖµ
+            // å¤„ç†è¿”å›å€¼
             if (pValue != nullptr) {
-                ;
-                // ´ÓpValueÖĞÈ¡Öµ
+                // ä»pValueä¸­å–å€¼
                 for (Py_ssize_t i = 0; i < PyList_Size(pValue); ++i) {
                     result.push_back(PyLong_AsLong(PyList_GetItem(pValue, i)));
                 }
@@ -49,8 +48,8 @@ std::vector<int> CppCaller::testFn(std::vector<int> data)
         }
     }
     else {
-        // Ö¤Ã÷ÓĞÎÊÌâ£¬pModuleÎª¿ÕÖ¸ÕëÁË
-        PyErr_Print(); // ´òÓ¡´íÎóĞÅÏ¢
+        // è¯æ˜æœ‰é—®é¢˜ï¼ŒpModuleä¸ºç©ºæŒ‡é’ˆäº†
+        PyErr_Print(); // æ‰“å°é”™è¯¯ä¿¡æ¯
     }
-    return result; // ·µ»Ø½á¹û
+    return result; // è¿”å›ç»“æœ
 }
