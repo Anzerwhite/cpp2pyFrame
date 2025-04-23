@@ -336,4 +336,4 @@ return 0;
 
 **解决方法：** 尝试将python目录下的pythonxxx.dll拷贝一份放到生成的release文件目录下
 
-![img](assets\download_image-1745402092029.png)
+![img](assets/download_image-1745402092029.png)
